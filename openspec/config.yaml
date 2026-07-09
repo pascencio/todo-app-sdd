@@ -1,0 +1,46 @@
+schema: spec-driven
+
+context: |
+  # Proyecto
+  Nombre: todo-app
+  Tipo: Monorepo pnpm con apps/* + packages/*
+  Stack: Nest.js v11.1 (TypeScript), TypeORM, PostgreSQL 18, Docker
+  Gestión paquetes: pnpm v11.10 (corepack)
+  Node: Última versión Current estable (v26.x)
+  ORM: TypeORM con Repository Pattern (clase abstracta como token DI, no interface)
+  Paths: TypeScript path aliases @/* → src/* (imports absolutos, no relativos)
+  API: RESTful, JSON, prefijo /tasks
+  Validación: class-validator + class-transformer con ValidationPipe global (whitelist, forbidNonWhitelisted)
+  Errores: HttpExceptionFilter global para responses consistentes
+  Docker: docker-compose.yml en raíz, Dockerfile por app en su carpeta
+  BD: PostgreSQL 18 requiere volume mount en /var/lib/postgresql (no /var/lib/postgresql/data)
+  Hot-reload: Volumen bind-mount src/ + nest start --watch
+
+  # Convenciones de código
+  - Usar siempre path alias @/ en imports, nunca rutas relativas
+  - DTOs con class-validator decorators, PartialType para updates
+  - Repository abstract class como contrato, implementación concreta con useClass
+  - Servicio lanza NotFoundException, controlador no maneja errores
+  - UUID v4 para PKs (ParseUUIDPipe en params)
+  - Variables de entorno para config (DB_HOST, DB_PORT, etc.)
+  - Sin autenticación ni autorización por ahora
+  - TypeORM synchronize: true solo en desarrollo
+
+rules:
+  proposal:
+    - Incluir stack técnico exacto con versiones
+    - Listar dependencias externas con justificación
+    - Especificar estructura de monorepo
+  design:
+    - Incluir diagramas Mermaid de flujo de requests y BD
+    - Documentar contrato de repositorio (abstract class)
+    - Incluir diccionario de datos
+    - Especificar variables de entorno requeridas
+  specs:
+    - Usar tablas HTTP para endpoints (método, ruta, body, respuesta, códigos)
+    - Incluir ejemplos curl
+    - Documentar códigos de error (400, 404, 500)
+  tasks:
+    - Separar por capas: Docker, Database, Repository, DTOs, Service, Controller
+    - Incluir paso de verificación (curl o test)
+    - Referenciar archivos con paths exactos

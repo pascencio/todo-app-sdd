@@ -1,0 +1,9 @@
+schema: spec-driven
+created: 2026-07-09
+status: verified
+lessons:
+  - Node 26 no incluye corepack → npm install -g corepack antes de corepack enable
+  - PG 18+ requiere volume mount en /var/lib/postgresql (no /var/lib/postgresql/data)
+  - TypeScript path aliases @/* mejoran legibilidad; Nest CLI los resuelve nativamente
+  - Clase abstracta como token DI evita @Inject() y es runtime-safe
+  - Siempre usar últimos stables (Node v26, PG 18, Nest v11) salvo que haya razón explícita
