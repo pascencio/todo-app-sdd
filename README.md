@@ -32,31 +32,46 @@ API disponible en `http://localhost:3000/tasks`.
 
 ## Ejemplo CRUD completo
 
+**1. Crear tarea** (guardar el `id` de la respuesta, se usa en los pasos siguientes)
+
 ```bash
-# 1. Crear tarea (guardar ID desde la respuesta JSON)
-RESP=$(curl -s -X POST http://localhost:3000/tasks \
+curl -s -X POST http://localhost:3000/tasks \
   -H "Content-Type: application/json" \
-  -d '{"title":"Comprar pan","description":"Pan integral"}')
-ID=$(echo "$RESP" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
-echo "$RESP"
+  -d '{"title":"Comprar pan","description":"Pan integral"}'
+```
 
-# 2. Listar todas
+**2. Listar todas**
+
+```bash
 curl -s http://localhost:3000/tasks
+```
 
-# 3. Obtener por ID
-curl -s http://localhost:3000/tasks/$ID
+**3. Obtener por ID** (reemplazar `:id` con el uuid del paso 1)
 
-# 4. Actualizar (marcar completada)
-curl -s -X PATCH http://localhost:3000/tasks/$ID \
+```bash
+curl -s http://localhost:3000/tasks/:id
+```
+
+**4. Actualizar** (marcar completada)
+
+```bash
+curl -s -X PATCH http://localhost:3000/tasks/:id \
   -H "Content-Type: application/json" \
   -d '{"completed":true}'
-
-# 5. Eliminar
-curl -s -X DELETE http://localhost:3000/tasks/$ID
-
-# 6. Verificar que ya no existe (responde 404)
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/tasks/$ID
 ```
+
+**5. Eliminar**
+
+```bash
+curl -s -X DELETE http://localhost:3000/tasks/:id
+```
+
+**6. Verificar que ya no existe** (responde `404`)
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/tasks/:id
+```
+
 
 ## Estructura
 
