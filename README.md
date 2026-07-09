@@ -33,30 +33,29 @@ API disponible en `http://localhost:3000/tasks`.
 ## Ejemplo CRUD completo
 
 ```bash
-# 1. Crear
-TASK=$(curl -s -X POST http://localhost:3000/tasks \
+# 1. Crear tarea (guardar ID desde la respuesta JSON)
+RESP=$(curl -s -X POST http://localhost:3000/tasks \
   -H "Content-Type: application/json" \
   -d '{"title":"Comprar pan","description":"Pan integral"}')
-echo "$TASK" | jq .
-ID=$(echo "$TASK" | jq -r .id)
+ID=$(echo "$RESP" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+echo "$RESP"
 
-# 2. Listar
-curl -s http://localhost:3000/tasks | jq .
+# 2. Listar todas
+curl -s http://localhost:3000/tasks
 
 # 3. Obtener por ID
-curl -s http://localhost:3000/tasks/$ID | jq .
+curl -s http://localhost:3000/tasks/$ID
 
 # 4. Actualizar (marcar completada)
 curl -s -X PATCH http://localhost:3000/tasks/$ID \
   -H "Content-Type: application/json" \
-  -d '{"completed":true}' | jq .
+  -d '{"completed":true}'
 
 # 5. Eliminar
 curl -s -X DELETE http://localhost:3000/tasks/$ID
 
-# 6. Verificar que ya no existe
+# 6. Verificar que ya no existe (responde 404)
 curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/tasks/$ID
-# → 404
 ```
 
 ## Estructura
