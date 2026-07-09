@@ -30,10 +30,33 @@ API disponible en `http://localhost:3000/tasks`.
 | `PATCH` | `/tasks/:id` | Actualizar tarea |
 | `DELETE` | `/tasks/:id` | Eliminar tarea |
 
+## Ejemplo CRUD completo
+
 ```bash
-curl -X POST http://localhost:3000/tasks \
+# 1. Crear
+TASK=$(curl -s -X POST http://localhost:3000/tasks \
   -H "Content-Type: application/json" \
-  -d '{"title":"Comprar pan"}'
+  -d '{"title":"Comprar pan","description":"Pan integral"}')
+echo "$TASK" | jq .
+ID=$(echo "$TASK" | jq -r .id)
+
+# 2. Listar
+curl -s http://localhost:3000/tasks | jq .
+
+# 3. Obtener por ID
+curl -s http://localhost:3000/tasks/$ID | jq .
+
+# 4. Actualizar (marcar completada)
+curl -s -X PATCH http://localhost:3000/tasks/$ID \
+  -H "Content-Type: application/json" \
+  -d '{"completed":true}' | jq .
+
+# 5. Eliminar
+curl -s -X DELETE http://localhost:3000/tasks/$ID
+
+# 6. Verificar que ya no existe
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/tasks/$ID
+# → 404
 ```
 
 ## Estructura
